@@ -2,7 +2,12 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const LARGE_STEPS = 10;
+const GRID = 1 / LARGE_STEPS;
+const STARTUP_BRIGHTNESS = 0.50;
+const EPSILON = 0.001;
 const ORIGINAL_STEPS = '_bceOriginalNSteps';
+const ORIG_STEP_UP = '_bceStepUp';
+const ORIG_STEP_DOWN = '_bceStepDown';
 
 function collectScales(manager) {
     const scales = [];
@@ -13,6 +18,16 @@ function collectScales(manager) {
             scales.push(scale);
     }
     return scales;
+}
+
+function stepUpFrom(value) {
+    const idx = Math.floor(value / GRID + EPSILON) + 1;
+    return Math.min(1.0, idx * GRID);
+}
+
+function stepDownFrom(value) {
+    const idx = Math.ceil(value / GRID - EPSILON) - 1;
+    return Math.max(0.0, idx * GRID);
 }
 
 function applyNSteps(scale) {
@@ -35,10 +50,38 @@ function restoreNSteps(scale) {
     delete scale[ORIGINAL_STEPS];
 }
 
+function patchScale(scale) {
+    applyNSteps(scale);
+
+    if (scale[ORIG_STEP_UP])
+        return;
+
+    scale[ORIG_STEP_UP] = scale.stepUp.bind(scale);
+    scale[ORIG_STEP_DOWN] = scale.stepDown.bind(scale);
+
+    scale.stepUp = () => {
+        scale.value = stepUpFrom(scale.value);
+    };
+    scale.stepDown = () => {
+        scale.value = stepDownFrom(scale.value);
+    };
+}
+
+function unpatchScale(scale) {
+    if (scale[ORIG_STEP_UP]) {
+        scale.stepUp = scale[ORIG_STEP_UP];
+        scale.stepDown = scale[ORIG_STEP_DOWN];
+        delete scale[ORIG_STEP_UP];
+        delete scale[ORIG_STEP_DOWN];
+    }
+    restoreNSteps(scale);
+}
+
 export default class BrightnessControlEnhancement extends Extension {
     enable() {
         this._manager = Main.brightnessManager;
         this._changedId = 0;
+        this._setStartup = false;
 
         if (!this._manager) {
             console.warn(
@@ -59,6 +102,7 @@ export default class BrightnessControlEnhancement extends Extension {
             this._manager.disconnect(this._changedId);
 
         this._changedId = 0;
+        this._setStartup = false;
         this._manager = null;
     }
 
@@ -68,7 +112,22 @@ export default class BrightnessControlEnhancement extends Extension {
             return;
 
         for (const scale of collectScales(manager))
-            applyNSteps(scale);
+            patchScale(scale);
+
+        this._applyStartupBrightness(manager);
+    }
+
+    _applyStartupBrightness(manager) {
+        if (this._setStartup)
+            return;
+
+        const scale = manager.globalScale;
+        if (!scale || typeof scale.value !== 'number')
+            return;
+
+        this._setStartup = true;
+        if (Math.abs(scale.value - STARTUP_BRIGHTNESS) > EPSILON)
+            scale.value = STARTUP_BRIGHTNESS;
     }
 
     _restore() {
@@ -77,6 +136,6 @@ export default class BrightnessControlEnhancement extends Extension {
             return;
 
         for (const scale of collectScales(manager))
-            restoreNSteps(scale);
+            unpatchScale(scale);
     }
 }
