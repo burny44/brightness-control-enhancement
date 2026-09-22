@@ -5,6 +5,7 @@ UUID="brightness-control-enhancement@burny"
 SRC="$(cd "$(dirname "$0")" && pwd)"
 DEST="${HOME}/.local/share/gnome-shell/extensions/${UUID}"
 
+glib-compile-schemas "${SRC}/schemas"
 mkdir -p "$(dirname "${DEST}")"
 ln -sfn "${SRC}" "${DEST}"
 

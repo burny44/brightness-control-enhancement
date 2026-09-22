@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.brightness-control-enhancement"
+          path="/org/gnome/shell/extensions/brightness-control-enhancement/">
+    <key name="night-light-brightness" type="b">
+      <default>false</default>
+      <summary>Use Night Light hours for brightness</summary>
+      <description>
+        When enabled, brightness follows GNOME’s Night Light schedule:
+        one level during the day and another at night.
+      </description>
+    </key>
+    <key name="day-brightness" type="i">
+      <default>50</default>
+      <summary>Day brightness</summary>
+      <description>Brightness percent used during the day.</description>
+      <range min="0" max="100"/>
+    </key>
+    <key name="night-brightness" type="i">
+      <default>30</default>
+      <summary>Night brightness</summary>
+      <description>Brightness percent used during the night.</description>
+      <range min="0" max="100"/>
+    </key>
+  </schema>
+</schemalist>
