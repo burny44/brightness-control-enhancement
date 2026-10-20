@@ -1,10 +1,10 @@
 # Brightness Control Enhancement
 
-A GNOME Shell extension that makes keyboard brightness keys move in **10%** steps instead of GNOME’s default **5%**.
+A GNOME Shell extension that changes the screen in **10%** steps with the brightness keys, instead of GNOME’s default **5%**.
 
 GNOME divides brightness into 20 levels. Enable this extension to use 10 levels instead. Disable it to go back. There is no extra setting.
 
-On login GNOME starts at **45%** (backlight value 100 in the 10–210 range). The extension moves that to **50%** (value 110). That is not full brightness; 100% is still 210. After that, keys move 10% at a time: 40, 50, 60, 70, …
+On login GNOME starts at **45%** (backlight value 100 in the 10–210 range). The extension sets that to **50%** (value 110). That is not full brightness; 100% is still 210. After that, each key press changes brightness by 10%: 40, 50, 60, 70, …
 
 Optional **Night Light** in the extension settings (not Quick Settings) reads GNOME’s Night Light hours and uses a day level and a night level instead of 50%. The hours themselves are not edited here — they stay in Settings → Displays → Night Light.
 
@@ -41,7 +41,7 @@ Or use the Extensions app.
 
 ## Usage
 
-Turn the extension on. Login brightness becomes 50%. Brightness up/down keys then move 10% per press.
+Turn the extension on. Login brightness becomes 50%. Each brightness key press then changes the screen by 10%.
 
 Open **Extensions → Brightness Control Enhancement → Settings** for Night Light:
 

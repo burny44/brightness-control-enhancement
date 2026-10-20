@@ -1,7 +1,7 @@
 {
     "uuid": "brightness-control-enhancement@burny",
     "name": "Brightness Control Enhancement",
-    "description": "Makes keyboard brightness keys move in 10% steps instead of GNOME's default 5%, sets login brightness to 50%, and can follow GNOME Night Light hours with separate day and night levels.",
+    "description": "Brightness keys change the screen in 10% steps instead of GNOME's default 5%. Login starts at 50%, with optional day and night levels on GNOME Night Light hours.",
     "shell-version": ["49", "50"],
     "settings-schema": "org.gnome.shell.extensions.brightness-control-enhancement",
     "url": "https://github.com/burny44/brightness-control-enhancement",
